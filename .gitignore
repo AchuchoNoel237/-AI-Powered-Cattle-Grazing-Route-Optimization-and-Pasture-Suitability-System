@@ -1,0 +1,19 @@
+# Virtual environment
+venv/
+
+# Processed data (too large for GitHub — see README for download instructions)
+data/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Django
+db.sqlite3
+staticfiles/
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+.vscode/settings.jsondata

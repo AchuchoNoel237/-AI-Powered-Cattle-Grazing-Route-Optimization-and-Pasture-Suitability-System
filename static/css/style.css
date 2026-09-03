@@ -1,0 +1,219 @@
+/* static/css/style.css */
+/* ============================================================
+   Color scheme: dark green background, white text, light green accents
+   ============================================================ */
+
+:root {
+    --bg-dark-green: #0d2818;
+    --bg-panel-green: #143d24;
+    --accent-light-green: #7ed957;
+    --accent-light-green-dim: #4a9e3a;
+    --text-white: #f5f5f5;
+    --text-muted: #c8d6c8;
+    --border-green: #2a5c3a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    background-color: var(--bg-dark-green);
+    color: var(--text-white);
+    height: 100vh;
+    overflow: hidden;
+}
+
+#app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    background-color: var(--bg-panel-green);
+    padding: 12px 20px;
+    border-bottom: 2px solid var(--accent-light-green);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: var(--accent-light-green);
+}
+
+header .subtitle {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+#main-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* --- Control panel --- */
+#control-panel {
+    width: 340px;
+    background-color: var(--bg-panel-green);
+    padding: 20px;
+    overflow-y: auto;
+    border-right: 2px solid var(--border-green);
+    flex-shrink: 0;
+}
+
+#control-panel label {
+    display: block;
+    margin-top: 14px;
+    margin-bottom: 4px;
+    color: var(--accent-light-green);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+#control-panel input,
+#control-panel select {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-green);
+    background-color: var(--bg-dark-green);
+    color: var(--text-white);
+    font-size: 0.95rem;
+}
+
+#control-panel input:focus,
+#control-panel select:focus {
+    outline: none;
+    border-color: var(--accent-light-green);
+}
+
+#gps-status {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+#gps-status.active {
+    color: var(--accent-light-green);
+}
+
+button#find-route-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background-color: var(--accent-light-green);
+    color: var(--bg-dark-green);
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+button#find-route-btn:hover {
+    background-color: var(--accent-light-green-dim);
+}
+
+button#find-route-btn:disabled {
+    background-color: var(--border-green);
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+/* --- Result panel --- */
+#result-panel {
+    margin-top: 20px;
+    padding: 14px;
+    background-color: var(--bg-dark-green);
+    border: 1px solid var(--border-green);
+    border-radius: 8px;
+    display: none;
+}
+
+#result-panel.visible {
+    display: block;
+}
+
+#result-panel h3 {
+    color: var(--accent-light-green);
+    margin-top: 0;
+    font-size: 1rem;
+}
+
+#result-panel .result-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 0.88rem;
+    border-bottom: 1px solid var(--border-green);
+}
+
+#result-panel .result-row span:first-child {
+    color: var(--text-muted);
+}
+
+#error-banner {
+    display: none;
+    background-color: #5c1e1e;
+    color: #ffb3b3;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 14px;
+    font-size: 0.85rem;
+}
+
+#error-banner.visible {
+    display: block;
+}
+
+/* --- Map --- */
+#map {
+    flex: 1;
+    background-color: var(--bg-dark-green);
+}
+
+/* Leaflet popup override for dark theme */
+.leaflet-popup-content-wrapper {
+    background-color: var(--bg-panel-green);
+    color: var(--text-white);
+    border-radius: 8px;
+}
+
+.leaflet-popup-tip {
+    background-color: var(--bg-panel-green);
+}
+
+.leaflet-popup-content h4 {
+    color: var(--accent-light-green);
+    margin: 0 0 6px 0;
+}
+
+/* --- Mobile responsiveness --- */
+@media (max-width: 768px) {
+    #main-body {
+        flex-direction: column;
+    }
+    #control-panel {
+        width: 100%;
+        max-height: 45vh;
+        border-right: none;
+        border-bottom: 2px solid var(--border-green);
+    }
+    #map {
+        flex: 1;
+        min-height: 40vh;
+    }
+    header h1 {
+        font-size: 1.1rem;
+    }
+}

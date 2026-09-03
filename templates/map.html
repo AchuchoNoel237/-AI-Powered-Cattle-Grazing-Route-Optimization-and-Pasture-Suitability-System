@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adamawa Transhumance Route Finder</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+</head>
+<body>
+    <div id="app-container">
+        <header>
+            <div>
+                <h1>🐄 Adamawa Transhumance Route Finder</h1>
+                <div class="subtitle">Dynamic Pasture Suitability &amp; Grazing Route Optimization</div>
+            </div>
+        </header>
+
+        <div id="main-body">
+            <div id="control-panel">
+                <label for="gps-btn-label">Herder Location</label>
+                <button id="gps-btn" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border-green); background-color: var(--bg-dark-green); color: var(--accent-light-green); cursor:pointer;">
+                    📍 Detect My Location
+                </button>
+                <div id="gps-status">Location not yet detected — tap the map to set manually.</div>
+
+                <label for="cattle-size">Cattle Size (head)</label>
+                <input type="number" id="cattle-size" min="1" value="50" />
+
+                <label for="livestock-type">Livestock Type</label>
+                <select id="livestock-type">
+                    <option value="cattle_adult_zebu">Adult Zebu Cattle</option>
+                    <option value="cattle_young">Young Cattle</option>
+                    <option value="camel">Camel</option>
+                    <option value="horse">Horse</option>
+                    <option value="donkey">Donkey</option>
+                    <option value="sheep_goat">Sheep / Goat</option>
+                </select>
+
+                <label for="month-select">Month</label>
+                <select id="month-select">
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+
+                <button id="find-route-btn">Find Best Grazing Route</button>
+
+                <div id="error-banner"></div>
+
+                <div id="result-panel">
+                    <h3>Recommended Zone <span id="result-zone-id"></span></h3>
+                    <div class="result-row"><span>Quality</span><span id="result-quality"></span></div>
+                    <div class="result-row"><span>Zone Area</span><span id="result-area"></span></div>
+                    <div class="result-row"><span>Capacity (this month)</span><span id="result-capacity"></span></div>
+                    <div class="result-row"><span>Your Herd</span><span id="result-requested"></span></div>
+                    <div class="result-row"><span>Surplus</span><span id="result-surplus"></span></div>
+                    <div class="result-row"><span>Best Month</span><span id="result-best-month"></span></div>
+                    <div class="result-row"><span>Worst Month</span><span id="result-worst-month"></span></div>
+                    <div class="result-row"><span>Route Distance</span><span id="result-distance"></span></div>
+                    <div class="result-row"><span>Est. Travel Time</span><span id="result-days"></span></div>
+                </div>
+            </div>
+
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
