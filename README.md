@@ -1,4 +1,4 @@
-# Adamawa Transhumance Route Finder
+## AI-Powered-Cattle-Grazing-Route-Optimization-and-Pasture-Suitability-System
 
 A web application that recommends grazing zones and travel routes for herders in the Adamawa Region, Cameroon, based on satellite-derived pasture suitability, carrying capacity, and cost-aware routing.
 
@@ -54,7 +54,7 @@ pip install django djangorestframework geopandas rasterio networkx pandas numpy 
 
 ### 4. Data Setup
 
-This project requires a processed data package that is **not included in this repository** (it is too large for version control). Obtain `pasture_project_data.zip` and extract it so the folder structure looks like this:
+This project requires a processed data package that is **not included in this repository** (it is too large for version control). Obtain `pasture_project_data.zip` from the notebook and extract it so the folder structure looks like this:
 
 ```
 pasture_transhumance_project/
