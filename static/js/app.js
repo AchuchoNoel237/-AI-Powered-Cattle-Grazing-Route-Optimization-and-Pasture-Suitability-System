@@ -194,21 +194,33 @@ function renderAllRoutes(data) {
     routeLayers.push(marker);
     
         // --- Minor pasture patches (small light-green dots) ---
-    data.minor_pasture_patches.forEach((patch) => {
-        const dot = L.circleMarker([patch.lat, patch.lon], {
-            radius: 5, color: "#a5d6a7", fillColor: "#a5d6a7", fillOpacity: 0.8, weight: 1,
-        }).addTo(map);
-        dot.bindPopup(`
-            <b>Minor pasture patch</b><br/>
-            Area: ${patch.area_km2} km²<br/>
-            Score: ${patch.mean_score}<br/>
-            ${patch.distance_from_route_km} km from route
-        `);
-        routeLayers.push(dot);
-    });
+        data.minor_pasture_patches.forEach((patch) => {
+            const connector = L.polyline(
+                [[patch.connector_lat, patch.connector_lon], [patch.lat, patch.lon]],
+                { color: "#a5d6a7", weight: 2, opacity: 0.6, dashArray: "4, 6" }
+            ).addTo(map);
+            routeLayers.push(connector);
+
+            const dot = L.circleMarker([patch.lat, patch.lon], {
+                radius: 5, color: "#a5d6a7", fillColor: "#a5d6a7", fillOpacity: 0.8, weight: 1,
+            }).addTo(map);
+            dot.bindPopup(`
+                <b>Minor pasture patch</b><br/>
+                Area: ${patch.area_km2} km²<br/>
+                Score: ${patch.mean_score}<br/>
+                ${patch.distance_from_route_km} km from route
+            `);
+            routeLayers.push(dot);
+        });
 
     // --- Water points (small blue dots) ---
     data.water_points.forEach((wp) => {
+        const connector = L.polyline(
+            [[wp.connector_lat, wp.connector_lon], [wp.lat, wp.lon]],
+            { color: "#4fc3f7", weight: 2, opacity: 0.6, dashArray: "4, 6" }
+        ).addTo(map);
+        routeLayers.push(connector);
+
         const dot = L.circleMarker([wp.lat, wp.lon], {
             radius: 4, color: "#4fc3f7", fillColor: "#4fc3f7", fillOpacity: 0.9, weight: 1,
         }).addTo(map);

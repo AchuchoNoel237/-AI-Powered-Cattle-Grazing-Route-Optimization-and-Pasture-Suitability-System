@@ -8,6 +8,7 @@ import rasterio
 import networkx as nx
 from pyproj import Transformer
 from django.conf import settings
+from shapely.ops import nearest_points
 
 from routing.capacity import (
     zone_df_attrs, zone_month_capacity_df, normalize_month,
@@ -225,31 +226,47 @@ for wid in range(1, n_water_bodies + 1):
 print(f"✅ [router.py] Found {len(WATER_POINTS)} distinct water bodies")
 
 
-def find_nearby_features(route_waypoints, corridor_km=5, max_each=5):
+def find_nearby_features(route_waypoints, pasture_corridor_km=5, water_corridor_km=10, max_each=5):
     """
     Given a route's waypoints, returns minor pasture patches and water
-    points within `corridor_km` of the route line, nearest first,
-    capped at `max_each` of each.
+    points near the route, nearest first, capped at `max_each` of each.
+    Water uses a WIDER corridor than pasture patches by default, since
+    permanent water is genuinely sparse across Adamawa — a tight corridor
+    would legitimately find zero water points on many routes, not because
+    of a bug, but because water really is that scarce regionally.
+    Each result also includes a "connector" point — the nearest point ON
+    the route itself — so the frontend can draw a dashed line from the
+    route out to the feature.
     """
     utm_coords = [transformer_to_utm.transform(wp["lon"], wp["lat"]) for wp in route_waypoints]
     route_line = LineString(utm_coords)
-    corridor_m = corridor_km * 1000
 
-    def nearby(features):
+    def nearby(features, corridor_km, label):
+        corridor_m = corridor_km * 1000
         results = []
         for f in features:
             pt = Point(f["utm_x"], f["utm_y"])
             dist_m = route_line.distance(pt)
             if dist_m <= corridor_m:
+                nearest_on_route, _ = nearest_points(route_line, pt)
+                conn_lon, conn_lat = transformer_to_wgs84.transform(nearest_on_route.x, nearest_on_route.y)
                 clean = {k: v for k, v in f.items() if k not in ("utm_x", "utm_y")}
                 clean["distance_from_route_km"] = round(dist_m / 1000, 2)
+                clean["connector_lat"] = round(conn_lat, 6)
+                clean["connector_lon"] = round(conn_lon, 6)
                 results.append(clean)
         results.sort(key=lambda r: r["distance_from_route_km"])
-        return results[:max_each]
+        top = results[:max_each]
+        print(f"   {label}: {len(results)} within {corridor_km}km corridor, showing top {len(top)}")
+        return top
+
+    print("🔍 Searching for nearby features along route...")
+    minor = nearby(MINOR_PATCHES, pasture_corridor_km, "Minor pasture patches")
+    water = nearby(WATER_POINTS, water_corridor_km, "Water points")
 
     return {
-        "minor_pasture_patches": nearby(MINOR_PATCHES),
-        "water_points": nearby(WATER_POINTS),
+        "minor_pasture_patches": minor,
+        "water_points": water,
     }
 
 
@@ -460,7 +477,7 @@ def find_best_zone_with_route_alternatives(start_lat, start_lon, n_cattle, month
             "estimated_travel_days": round(estimated_days, 1),
             "total_weighted_cost": round(total_weighted_cost, 2),
         })
-    nearby_features = find_nearby_features(results[0]["waypoints"], corridor_km=5, max_each=5)
+    nearby_features = find_nearby_features(results[0]["waypoints"], pasture_corridor_km=5, water_corridor_km=10, max_each=5)
     return {
         "zone_id": int(zid),
         "month": month_name,

@@ -16,4 +16,4 @@ staticfiles/
 # OS/editor junk
 .DS_Store
 Thumbs.db
-.vscode/settings.jsondata
+.vscode/settings.json
